@@ -38,7 +38,8 @@ func initGormMysql() {
 	})
 
 	datasource, err := gorm.Open(mysql.Open(mysqlConfig.DSN), &gorm.Config{
-		Logger: gormLogger,
+		Logger:                 gormLogger,
+		SkipDefaultTransaction: true,
 	})
 	if err != nil {
 		panic(err)
