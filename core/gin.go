@@ -9,6 +9,7 @@ import (
 )
 
 var Router *gin.Engine
+var ContextRouter *gin.RouterGroup
 
 /*
 initGin 初始化gin
@@ -23,6 +24,8 @@ func initGin() {
 		context.JSON(404, response.Response{StatusCode: 404, StatusMsg: "Not Found!"})
 	})
 	Router = engine
+	Router = engine
+	ContextRouter = engine.Group(global.Configuration.Server.ContextPath)
 }
 
 /*

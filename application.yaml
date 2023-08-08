@@ -1,5 +1,6 @@
 server:
   port: 8089
+  contextPath: /douyin
 datasource:
   mysql:
     dsn: root:root@tcp(127.0.0.1:3306)/minimal-tiktok?charset=utf8mb4&parseTime=True&loc=Local

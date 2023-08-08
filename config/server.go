@@ -1,9 +1,11 @@
 package config
 
 type Server struct {
-	Port int
+	Port        int
+	ContextPath string
 }
 
 var DefaultServer = &Server{
-	Port: 8080,
+	Port:        8080,
+	ContextPath: "/",
 }
