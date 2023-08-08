@@ -1,4 +1,5 @@
-# alumnus circle
+# minimal tiktok
+字节跳动第六届青训营大项目，极简版抖音
 ## 1. 目录结构
 config: 配置结构体包
 
