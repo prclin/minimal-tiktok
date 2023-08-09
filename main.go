@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/prclin/minimal-tiktok/controller"
 	"github.com/prclin/minimal-tiktok/core"
 	"github.com/prclin/minimal-tiktok/global"
@@ -28,6 +29,7 @@ func main() {
 	}
 	err := server.ListenAndServe()
 	if err != nil {
+		fmt.Println(err)
 		panic("server start failed...")
 	}
 }

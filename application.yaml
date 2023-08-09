@@ -1,7 +1,7 @@
 server:
-  port: 8089
+  port: 8080
 datasource:
   mysql:
-    dsn: root:root@tcp(127.0.0.1:3306)/minimal-tiktok?charset=utf8mb4&parseTime=True&loc=Local
+    dsn: root:2002@tcp(127.0.0.1:3306)/tiktok?charset=utf8mb4&parseTime=True&loc=Local
 zap:
   level: debug
