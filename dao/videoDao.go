@@ -7,7 +7,7 @@ import (
 
 func SaveVideoInfo(video *entity.Video) bool {
 
-	res := global.Datasource.Create(&video)
+	res := global.Datasource.Table("video").Create(&video)
 	if res.Error != nil {
 		global.Logger.Error(res.Error)
 		return false

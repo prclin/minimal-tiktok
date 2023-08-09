@@ -1,10 +1,6 @@
 server:
-<<<<<<< Updated upstream
-  port: 8089
-  contextPath: /douyin
-=======
   port: 7070
->>>>>>> Stashed changes
+  contextPath: /douyin
 datasource:
   mysql:
     dsn: root:20020716@tcp(192.168.200.129:3306)/tiktok?charset=utf8mb4&parseTime=True&loc=Local

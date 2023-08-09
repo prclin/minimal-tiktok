@@ -6,11 +6,6 @@ type Server struct {
 }
 
 var DefaultServer = &Server{
-<<<<<<< Updated upstream
 	Port:        8080,
 	ContextPath: "/",
-=======
-	Port:        7070,
-	ContextPath: "/douyin",
->>>>>>> Stashed changes
 }

@@ -25,10 +25,6 @@ func initGin() {
 		context.JSON(404, response.Response{StatusCode: 404, StatusMsg: "Not Found!"})
 	})
 	Router = engine
-<<<<<<< Updated upstream
-	Router = engine
-=======
->>>>>>> Stashed changes
 	ContextRouter = engine.Group(global.Configuration.Server.ContextPath)
 }
 
