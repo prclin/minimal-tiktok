@@ -1,11 +1,12 @@
 package core
 
 import (
+	"strconv"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/prclin/minimal-tiktok/global"
 	"github.com/prclin/minimal-tiktok/model/response"
-	"strconv"
-	"time"
 )
 
 var Router *gin.Engine
@@ -24,7 +25,10 @@ func initGin() {
 		context.JSON(404, response.Response{StatusCode: 404, StatusMsg: "Not Found!"})
 	})
 	Router = engine
+<<<<<<< Updated upstream
 	Router = engine
+=======
+>>>>>>> Stashed changes
 	ContextRouter = engine.Group(global.Configuration.Server.ContextPath)
 }
 

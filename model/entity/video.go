@@ -7,7 +7,11 @@ Video 视频实体
 */
 type Video struct {
 	Id            uint64 `json:"id"` // 视频唯一标识
+<<<<<<< HEAD
 	UserId        uint64
+=======
+	UserId        int64
+>>>>>>> 8a44ffc (feat: rebase from master and add video feed support)
 	Title         string `json:"title"`          // 视频标题
 	PlayURL       string `json:"play_url"`       // 视频播放地址
 	CoverURL      string `json:"cover_url"`      // 视频封面地址

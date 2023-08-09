@@ -17,7 +17,7 @@ type Mysql struct {
 
 var DefaultDataSource = &Datasource{
 	Mysql: &Mysql{
-		DSN:                   "",
+		DSN:                   "root:20020716@tcp(192.168.200.129:3306)/tiktok?charset=utf8mb4&parseTime=True&loc=Local",
 		MaxIdleConnections:    10,
 		MaxOpenConnections:    20,
 		ConnectionMaxLifetime: 300,
