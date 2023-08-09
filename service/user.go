@@ -60,30 +60,6 @@ func RegisterHandler(c *gin.Context) {
 		//使用redis存储token
 		//client.Set(ctx, strconv.FormatInt(user.ID, 10), ss, 24*time.Hour)
 
-		//////测试解析功能
-		//////校验
-		//s2, err := client.Get(ctx, strconv.FormatInt(user.ID, 10)).Result()
-		//if err != nil {
-		//	var res = response.Douyin_user_register_response{
-		//		StatusCode: -1,
-		//		StatusMsg:  "token以过期,请重新登录！",
-		//		UserId:     -1,
-		//		Token:      "",
-		//	}
-		//
-		//	c.JSON(http.StatusOK, res)
-		//}
-		//tn, _ := jwt.ParseWithClaims(s2, &token.MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		//	return []byte("1234"), nil
-		//})
-		////判断校验结果
-		//
-		//if claims, ok := tn.Claims.(*token.MyCustomClaims); ok && tn.Valid {
-		//	fmt.Printf("%v************%v", claims.UserName, claims.Password)
-		//} else {
-		//	fmt.Println(ok, "++++++++++++++++++++++++++++++++++++++buok")
-		//}
-
 		//设置返回信息
 		var res response.Douyin_user_register_response
 		res.StatusCode = 0

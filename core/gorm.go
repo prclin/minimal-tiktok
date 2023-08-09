@@ -7,6 +7,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 	"strings"
 	"time"
 )
@@ -38,7 +39,8 @@ func initGormMysql() {
 	})
 
 	datasource, err := gorm.Open(mysql.Open(mysqlConfig.DSN), &gorm.Config{
-		Logger: gormLogger,
+		Logger:         gormLogger,
+		NamingStrategy: schema.NamingStrategy{SingularTable: true},
 	})
 	if err != nil {
 		panic(err)

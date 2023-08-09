@@ -8,13 +8,13 @@ import (
 )
 
 func init() {
-	core.Router.GET("/any", func(context *gin.Context) {
+	core.Router.POST("/any", func(context *gin.Context) {
 		context.JSON(200, response.Response{StatusCode: 200, StatusMsg: "ok"})
 	})
 	//core.Router.NoRoute(func(context *gin.Context) {
 	//	context.JSON(200, response.Response{StatusCode: 200, StatusMsg: "ok"})
 	//})
 
-	core.Router.POST("/user/register/", service.RegisterHandler)
+	core.ContextRouter.POST("/user/register/", service.RegisterHandler)
 
 }
