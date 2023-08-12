@@ -3,6 +3,6 @@ server:
   contextPath: /douyin
 datasource:
   mysql:
-    dsn: root:root@tcp(127.0.0.1:3306)/minimal-tiktok?charset=utf8mb4&parseTime=True&loc=Local
+    dsn: root:1234@tcp(127.0.0.1:3306)/minimal-tiktok?charset=utf8mb4&parseTime=True&loc=Local
 zap:
   level: debug
