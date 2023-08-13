@@ -14,6 +14,10 @@ func init() {
 }
 
 func feed(c *gin.Context) {
+	token := c.Query("token")
+	if token == "" {
+		c.JSON(http.StatusOK, &response.Response{StatusCode: 0, StatusMsg: "用户未登录，请登录！"})
+	}
 	videos := service.GetVideo(c)
 	var at int64
 	if videos[0].CreatedAt.IsZero() {
