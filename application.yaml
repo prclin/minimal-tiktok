@@ -6,3 +6,21 @@ datasource:
     dsn: root:root@tcp(127.0.0.1:3306)/minimal-tiktok?charset=utf8mb4&parseTime=True&loc=Local
 zap:
   level: debug
+jwt:
+  rsa:
+    privateKey: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIBOwIBAAJBAJS/Q6xhgqzycc5KEPtQrI8Bf8WakGmpum3zutno28qASP1Y0BAs
+      WTEVNtrxuVXb9R3ebcrI5lYnkxR5DobffWkCAwEAAQJAdGptMJDwkSL+5xEY0ViG
+      dTYbJjCeLdRk0IEdEEcrHgSvn6YRvlQ5lsSMSFxRscCO40XMq9OofPzV6RD1kWgQ
+      AQIhAMXwMHC3qXmCcsxcyJ3yjCjRzSmA+PQLkijX2Z4nFQ/pAiEAwGEohnQXgdDc
+      vGauBJQc3clb33s4y+Woi86WEAkUEYECIHxCWsaIJfZH9DVjEfZF68M8YiVp99+M
+      3AaT6uOj+U7xAiEAk6n/8TQq1vn6dKJb8CfAAH0Oh/uNHPSq6qUniidtwAECIQCW
+      cPfmrnitlRFkmV9/c5Waln9VXpj0e0sU7Zj4GqOOSg==
+      -----END RSA PRIVATE KEY-----
+      ————————————————
+    publicKey: |
+      -----BEGIN RSA PUBLIC KEY-----
+      MEgCQQCUv0OsYYKs8nHOShD7UKyPAX/FmpBpqbpt87rZ6NvKgEj9WNAQLFkxFTba
+      8blV2/Ud3m3KyOZWJ5MUeQ6G331pAgMBAAE=
+      -----END RSA PUBLIC KEY-----
