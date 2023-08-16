@@ -8,19 +8,18 @@ import (
 /*
 GetPublishList 通过userId获取用户的视频发布列表
 */
-func GetPublishList(userId uint64) []response.Video {
+func GetPublishList(erId, eeId uint64) []response.VideoInfo {
 	//获取用户信息
-	author := GetUserInfo(userId)
+	userInfo := GetUserInfo(erId, eeId)
 	//获取用户视频列表
-	videos := dao.SelectVideosByUserId(userId)
-
+	videos := dao.SelectVideosByUserId(eeId)
 	//映射
-	rVideos := make([]response.Video, len(videos)) //避免切片扩容
+	rVideos := make([]response.VideoInfo, len(videos)) //避免切片扩容
 	for _, video := range videos {
-		rVideos = append(rVideos, response.Video{
+		rVideos = append(rVideos, response.VideoInfo{
 			Video:      video,
-			Author:     author,
-			IsFavorite: dao.IsFavorite(userId, video.Id), //是否喜欢
+			Author:     userInfo.User,
+			IsFavorite: dao.IsFavorite(erId, video.Id), //是否喜欢
 		})
 	}
 	return rVideos

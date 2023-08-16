@@ -14,7 +14,7 @@ import (
 
 type TokenClaims struct {
 	jwt.RegisteredClaims
-	Id uint64
+	Id uint64 `json:"id"`
 }
 
 // MD5 加密字符串
@@ -39,6 +39,27 @@ func GenerateToken(id uint64) (string, error) {
 	return token, err
 }
 
+// ParseToken 解析token
+func ParseToken(tokenStr string) (*TokenClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenStr, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return parsePublicKey([]byte(global.Configuration.Jwt.RSA.PublicKey))
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if !token.Valid {
+		return nil, errors.New("claims invalid")
+	}
+
+	claims, ok := token.Claims.(*TokenClaims)
+	if !ok {
+		return nil, errors.New("invalid claim type")
+	}
+
+	return claims, nil
+}
+
 // parsePrivateKey 解析PKCS1格式私钥
 func parsePrivateKey(buf []byte) (*rsa.PrivateKey, error) {
 	p := &pem.Block{}
@@ -47,4 +68,13 @@ func parsePrivateKey(buf []byte) (*rsa.PrivateKey, error) {
 		return nil, errors.New("parse private key error")
 	}
 	return x509.ParsePKCS1PrivateKey(p.Bytes)
+}
+
+// parsePublicKey 解析PKCS1格式公钥
+func parsePublicKey(buf []byte) (*rsa.PublicKey, error) {
+	block, _ := pem.Decode(buf)
+	if block == nil {
+		return nil, errors.New("block nil")
+	}
+	return x509.ParsePKCS1PublicKey(block.Bytes)
 }

@@ -83,7 +83,34 @@ func UserLogin(user entity.User) response.UserEnrollResponse {
 	return response.UserEnrollResponse{Response: response.Response{StatusCode: 0, StatusMsg: "登录成功"}, UserId: rUser.Id, Token: token}
 }
 
-func GetUserInfo(id uint64) response.User {
-	user := dao.SelectUserInfoById(id)
-	return response.User{User: user, IsFollow: false}
+func GetUserInfo(erId, eeId uint64) response.UserInfoResponse {
+	user, err := dao.SelectUserById(eeId)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return response.UserInfoResponse{
+				Response: response.Response{StatusCode: 1, StatusMsg: "用户不存在"},
+			}
+		} else {
+			global.Logger.Debug(err)
+			return response.UserInfoResponse{
+				Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"},
+			}
+		}
+	}
+
+	followed, err := dao.IsFollow(erId, eeId)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		return response.UserInfoResponse{
+			Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"},
+		}
+	}
+
+	return response.UserInfoResponse{
+		Response: response.Response{StatusCode: 0, StatusMsg: "ok"},
+		User: &response.UserInfo{
+			User:     user,
+			IsFollow: followed,
+		},
+	}
 }
