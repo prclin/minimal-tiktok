@@ -25,11 +25,11 @@ func InsertBy(tx *gorm.DB, user entity.User) (uint64, error) {
 /*
 SelectUserByUsername 通过用户名查找用户
 */
-func SelectUserByUsername(username string) entity.User {
+func SelectUserByUsername(username string) (entity.User, error) {
 	var user entity.User
 	sql := "select id,username,password from user where username=?"
-	global.Datasource.Raw(sql, username).Scan(&user)
-	return user
+	err := global.Datasource.Raw(sql, username).Scan(&user).Error
+	return user, err
 }
 
 func SelectUserInfoById(id uint64) entity.User {
