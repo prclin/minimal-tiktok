@@ -32,9 +32,16 @@ func SelectUserByUsername(username string) (entity.User, error) {
 	return user, err
 }
 
-func SelectUserInfoById(id uint64) entity.User {
+func SelectUserById(id uint64) (entity.User, error) {
 	var user entity.User
 	sql := "select id,username,name,avatar,background_image,signature,follow_count,follower_count,total_favorited,work_count,favorite_count from user where id=?"
-	global.Datasource.Raw(sql, id).Scan(&user)
-	return user
+	err := global.Datasource.Raw(sql, id).Scan(&user).Error
+	return user, err
+}
+
+func IsFollow(followerId, followeeId uint64) (bool, error) {
+	var followed bool
+	sql := "select count(*) from follow where follower_id=? and followee_id=?"
+	err := global.Datasource.Raw(sql, followerId, followeeId).Scan(&followed).Error
+	return followed, err
 }
