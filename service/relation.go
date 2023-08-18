@@ -51,3 +51,30 @@ func UserFollowList(userId uint64) response.FollowListResponse {
 
 	return response.FollowListResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
 }
+
+func UserFollowerList(userId uint64) response.FollowerListResponse {
+	//获取用户所有粉丝id
+	followers, err := dao.SelectFollowerBy(userId)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		global.Logger.Debug(err.Error())
+		return response.FollowerListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+	}
+	//获取所有粉丝信息
+	users, err := dao.SelectUserByIds(followers)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		return response.FollowerListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+	}
+
+	//映射
+	userInfos := make([]response.UserInfo, len(users))
+	for i := 0; i < len(users); i++ {
+		follow, err1 := dao.IsFollow(userId, users[i].Id)
+		if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
+			return response.FollowerListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+		}
+		userInfos[i] = response.UserInfo{User: users[i], IsFollow: follow}
+	}
+
+	return response.FollowerListResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
+}

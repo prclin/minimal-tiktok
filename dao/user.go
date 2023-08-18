@@ -59,3 +59,10 @@ func SelectFolloweeBy(followerId uint64) ([]uint64, error) {
 	err := global.Datasource.Raw(sql, followerId).Scan(&followees).Error
 	return followees, err
 }
+
+func SelectFollowerBy(followeeId uint64) ([]uint64, error) {
+	var followers []uint64
+	sql := "select follower_id from follow where followee_id=?"
+	err := global.Datasource.Raw(sql, followeeId).Scan(&followers).Error
+	return followers, err
+}
