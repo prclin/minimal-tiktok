@@ -13,6 +13,7 @@ import (
 func init() {
 	relation := core.ContextRouter.Group("/relation")
 	relation.POST("/action", PostFollowAction)
+	relation.GET("/follow/list", GetFollowList)
 }
 
 /*
@@ -44,4 +45,37 @@ func PostFollowAction(c *gin.Context) {
 
 	result := service.FollowAction(followerId, query.ToUserId, query.ActionType)
 	c.JSON(http.StatusOK, result)
+}
+
+/*
+GetFollowList 获取关注列表
+
+参数 userId token
+*/
+func GetFollowList(c *gin.Context) {
+	//参数校验
+	var query struct {
+		UserId uint64 `form:"user_id" binding:"required,min=1"`
+		Token  string `form:"token" binding:"required"`
+	}
+	err := c.ShouldBindQuery(&query)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		c.JSON(http.StatusOK, &response.FollowListResponse{
+			Response: response.Response{StatusCode: 1, StatusMsg: "参数错误"},
+		})
+		return
+	}
+	_, err = util.ParseToken(query.Token)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		c.JSON(http.StatusOK, &response.FollowListResponse{
+			Response: response.Response{StatusCode: 1, StatusMsg: "参数错误"},
+		})
+		return
+	}
+
+	//获取关注列表
+	res := service.UserFollowList(query.UserId)
+	c.JSON(http.StatusOK, res)
 }

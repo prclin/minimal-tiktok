@@ -39,9 +39,23 @@ func SelectUserById(id uint64) (entity.User, error) {
 	return user, err
 }
 
+func SelectUserByIds(ids []uint64) ([]entity.User, error) {
+	var users []entity.User
+	sql := "select id,username,name,avatar,background_image,signature,follow_count,follower_count,total_favorited,work_count,favorite_count from user where id in ?"
+	err := global.Datasource.Raw(sql, ids).Scan(&users).Error
+	return users, err
+}
+
 func IsFollow(followerId, followeeId uint64) (bool, error) {
 	var followed bool
 	sql := "select count(*) from follow where follower_id=? and followee_id=?"
 	err := global.Datasource.Raw(sql, followerId, followeeId).Scan(&followed).Error
 	return followed, err
+}
+
+func SelectFolloweeBy(followerId uint64) ([]uint64, error) {
+	var followees []uint64
+	sql := "select followee_id from follow where follower_id=?"
+	err := global.Datasource.Raw(sql, followerId).Scan(&followees).Error
+	return followees, err
 }
