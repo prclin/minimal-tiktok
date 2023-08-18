@@ -19,3 +19,8 @@ type UserInfo struct {
 	entity.User
 	IsFollow bool `json:"is_follow"` // true-已关注，false-未关注
 }
+
+type FollowListResponse struct {
+	Response
+	UserList []UserInfo `json:"user_list"`
+}
