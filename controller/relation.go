@@ -142,7 +142,6 @@ func GetFriendList(c *gin.Context) {
 		return
 	}
 	if claims.Id != query.UserId {
-		global.Logger.Debug(err.Error())
 		c.JSON(http.StatusOK, &response.RelationResponse{Response: response.Response{StatusCode: 1, StatusMsg: "不能获取别人的好友列表"}})
 		return
 	}
