@@ -14,6 +14,7 @@ import (
 func init() {
 	message := core.ContextRouter.Group("/message")
 	message.POST("/action", PostMessage)
+	message.GET("/chat", GetChatHistory)
 }
 
 /*
@@ -50,4 +51,31 @@ func PostMessage(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, response.Response{StatusCode: 0, StatusMsg: "发送成功"})
 
+}
+
+/*
+GetChatHistory 获取聊天记录
+
+参数 token toUserId
+*/
+func GetChatHistory(c *gin.Context) {
+	//参数校验
+	var query struct {
+		Token    string `form:"token" binding:"required"`
+		ToUserId uint64 `form:"to_user_id" binding:"required,min=1"`
+	}
+	err := c.ShouldBindQuery(&query)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		c.JSON(http.StatusOK, response.ChatResponse{Response: response.Response{StatusCode: 1, StatusMsg: "参数错误"}})
+		return
+	}
+	claims, err := util.ParseToken(query.Token)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		c.JSON(http.StatusOK, response.ChatResponse{Response: response.Response{StatusCode: 1, StatusMsg: "参数错误"}})
+		return
+	}
+	history := service.GetChatHistory(claims.Id, query.ToUserId)
+	c.JSON(http.StatusOK, history)
 }
