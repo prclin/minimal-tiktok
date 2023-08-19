@@ -15,6 +15,7 @@ func init() {
 	relation.POST("/action", PostFollowAction)
 	relation.GET("/follow/list", GetFollowList)
 	relation.GET("/follower/list", GetFollowerList)
+	relation.GET("/friend/list", GetFriendList)
 }
 
 /*
@@ -62,7 +63,7 @@ func GetFollowList(c *gin.Context) {
 	err := c.ShouldBindQuery(&query)
 	if err != nil {
 		global.Logger.Debug(err.Error())
-		c.JSON(http.StatusOK, &response.FollowListResponse{
+		c.JSON(http.StatusOK, &response.RelationResponse{
 			Response: response.Response{StatusCode: 1, StatusMsg: "参数错误"},
 		})
 		return
@@ -70,7 +71,7 @@ func GetFollowList(c *gin.Context) {
 	_, err = util.ParseToken(query.Token)
 	if err != nil {
 		global.Logger.Debug(err.Error())
-		c.JSON(http.StatusOK, &response.FollowListResponse{
+		c.JSON(http.StatusOK, &response.RelationResponse{
 			Response: response.Response{StatusCode: 1, StatusMsg: "参数错误"},
 		})
 		return
@@ -96,7 +97,7 @@ func GetFollowerList(c *gin.Context) {
 	err := c.ShouldBindQuery(&query)
 	if err != nil {
 		global.Logger.Debug(err.Error())
-		c.JSON(http.StatusOK, &response.FollowerListResponse{
+		c.JSON(http.StatusOK, &response.RelationResponse{
 			Response: response.Response{StatusCode: 1, StatusMsg: "参数错误"},
 		})
 		return
@@ -105,7 +106,7 @@ func GetFollowerList(c *gin.Context) {
 	_, err = util.ParseToken(query.Token)
 	if err != nil {
 		global.Logger.Debug(err.Error())
-		c.JSON(http.StatusOK, &response.FollowerListResponse{
+		c.JSON(http.StatusOK, &response.RelationResponse{
 			Response: response.Response{StatusCode: 1, StatusMsg: "参数错误"},
 		})
 		return
@@ -113,5 +114,41 @@ func GetFollowerList(c *gin.Context) {
 
 	//获取粉丝列表
 	res := service.UserFollowerList(query.UserId)
+	c.JSON(http.StatusOK, res)
+}
+
+/*
+GetFriendList 获取好友列表
+
+参数 userId token
+*/
+func GetFriendList(c *gin.Context) {
+
+	//参数校验
+	var query struct {
+		UserId uint64 `form:"user_id" binding:"required,min=1"`
+		Token  string `form:"token"`
+	}
+	err := c.ShouldBindQuery(&query)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		c.JSON(http.StatusOK, response.RelationResponse{Response: response.Response{StatusCode: 1, StatusMsg: "参数错误"}})
+		return
+	}
+	claims, err := util.ParseToken(query.Token)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		c.JSON(http.StatusOK, &response.RelationResponse{Response: response.Response{StatusCode: 1, StatusMsg: "登录信息不正确"}})
+		return
+	}
+	if claims.Id != query.UserId {
+		global.Logger.Debug(err.Error())
+		c.JSON(http.StatusOK, &response.RelationResponse{Response: response.Response{StatusCode: 1, StatusMsg: "不能获取别人的好友列表"}})
+		return
+	}
+
+	//获取好友列表
+	res := service.UserFriendList(query.UserId)
+
 	c.JSON(http.StatusOK, res)
 }

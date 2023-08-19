@@ -5,6 +5,7 @@ import (
 	"github.com/prclin/minimal-tiktok/dao"
 	"github.com/prclin/minimal-tiktok/global"
 	"github.com/prclin/minimal-tiktok/model/response"
+	"github.com/prclin/minimal-tiktok/util"
 	"gorm.io/gorm"
 )
 
@@ -25,18 +26,18 @@ func FollowAction(followerId, followeeId uint64, action uint) response.Response 
 	return response.Response{StatusCode: 0, StatusMsg: "操作成功"}
 }
 
-func UserFollowList(userId uint64) response.FollowListResponse {
+func UserFollowList(userId uint64) response.RelationResponse {
 	//获取用户所有被关注者id
 	followees, err := dao.SelectFolloweeBy(userId)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		global.Logger.Debug(err.Error())
-		return response.FollowListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+		return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
 	}
 	//获取所有被关注者信息
 	users, err := dao.SelectUserByIds(followees)
 	if err != nil {
 		global.Logger.Debug(err.Error())
-		return response.FollowListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+		return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
 	}
 
 	//映射
@@ -44,26 +45,26 @@ func UserFollowList(userId uint64) response.FollowListResponse {
 	for i := 0; i < len(users); i++ {
 		follow, err1 := dao.IsFollow(users[i].Id, userId)
 		if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
-			return response.FollowListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+			return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
 		}
 		userInfos[i] = response.UserInfo{User: users[i], IsFollow: follow}
 	}
 
-	return response.FollowListResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
+	return response.RelationResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
 }
 
-func UserFollowerList(userId uint64) response.FollowerListResponse {
+func UserFollowerList(userId uint64) response.RelationResponse {
 	//获取用户所有粉丝id
 	followers, err := dao.SelectFollowerBy(userId)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		global.Logger.Debug(err.Error())
-		return response.FollowerListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+		return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
 	}
 	//获取所有粉丝信息
 	users, err := dao.SelectUserByIds(followers)
 	if err != nil {
 		global.Logger.Debug(err.Error())
-		return response.FollowerListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+		return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
 	}
 
 	//映射
@@ -71,10 +72,37 @@ func UserFollowerList(userId uint64) response.FollowerListResponse {
 	for i := 0; i < len(users); i++ {
 		follow, err1 := dao.IsFollow(userId, users[i].Id)
 		if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
-			return response.FollowerListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+			return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
 		}
 		userInfos[i] = response.UserInfo{User: users[i], IsFollow: follow}
 	}
 
-	return response.FollowerListResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
+	return response.RelationResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
+}
+
+func UserFriendList(userId uint64) response.RelationResponse {
+	//获取粉丝
+	followers, err := dao.SelectFollowerBy(userId)
+	//获取关注
+	followees, err := dao.SelectFolloweeBy(userId)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+	}
+	//获取朋友 互相关注为朋友
+	friendIds := util.Intersection(followers, followees)
+	//获取朋友信息
+	friends, err := dao.SelectUserByIds(friendIds)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+	}
+
+	//映射
+	userInfos := make([]response.UserInfo, len(friends))
+	for i := 0; i < len(friends); i++ {
+		userInfos[i] = response.UserInfo{User: friends[i], IsFollow: true}
+	}
+
+	return response.RelationResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
 }
