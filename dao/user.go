@@ -66,3 +66,10 @@ func SelectFollowerBy(followeeId uint64) ([]uint64, error) {
 	err := global.Datasource.Raw(sql, followeeId).Scan(&followers).Error
 	return followers, err
 }
+
+func ExistsUser(id uint64) bool {
+	var exist bool
+	sql := "select count(id) from user where id=?"
+	global.Datasource.Raw(sql, id).Scan(&exist)
+	return exist
+}
