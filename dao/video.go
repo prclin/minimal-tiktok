@@ -3,6 +3,7 @@ package dao
 import (
 	"github.com/prclin/minimal-tiktok/global"
 	"github.com/prclin/minimal-tiktok/model/entity"
+	"gorm.io/gorm"
 )
 
 func SelectVideosByUserId(userId uint64) []entity.Video {
@@ -24,4 +25,9 @@ func SelectVideosBy(ids []uint64) ([]entity.Video, error) {
 	sql := "select id,title,play_url,cover_url,favorite_count,comment_count,extra,create_time from video where id in ?"
 	err := global.Datasource.Raw(sql, ids).Scan(&videos).Error
 	return videos, err
+}
+
+func UpdateCommentCountBy(tx *gorm.DB, id uint64, step int) error {
+	sql := "update video set comment_count=comment_count+? where id=?"
+	return tx.Exec(sql, step, id).Error
 }
