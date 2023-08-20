@@ -1,6 +1,8 @@
 package response
 
-import "github.com/prclin/minimal-tiktok/model/entity"
+import (
+	"github.com/prclin/minimal-tiktok/model/entity"
+)
 
 type VideoListResponse struct {
 	Response
@@ -12,4 +14,10 @@ type VideoInfo struct {
 	entity.Video
 	Author     *UserInfo `json:"author"`      // 视频作者信息
 	IsFavorite bool      `json:"is_favorite"` // true-已点赞，false-未点赞
+}
+
+type FeedResponse struct {
+	Response
+	NextTime  int64       `json:"next_time"`
+	VideoList []VideoInfo `json:"video_list"`
 }

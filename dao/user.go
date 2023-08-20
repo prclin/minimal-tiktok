@@ -46,11 +46,11 @@ func SelectUserByIds(ids []uint64) ([]entity.User, error) {
 	return users, err
 }
 
-func IsFollow(followerId, followeeId uint64) (bool, error) {
+func IsFollow(followerId, followeeId uint64) bool {
 	var followed bool
 	sql := "select count(*) from follow where follower_id=? and followee_id=?"
-	err := global.Datasource.Raw(sql, followerId, followeeId).Scan(&followed).Error
-	return followed, err
+	global.Datasource.Raw(sql, followerId, followeeId).Scan(&followed)
+	return followed
 }
 
 func SelectFolloweeBy(followerId uint64) ([]uint64, error) {

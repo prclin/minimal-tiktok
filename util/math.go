@@ -13,3 +13,12 @@ func Intersection(ar, br []uint64) []uint64 {
 	}
 	return is
 }
+
+// Ternary 仿三目运算符
+func Ternary[T any](condition bool, a, b T) T {
+	if condition {
+		return a
+	} else {
+		return b
+	}
+}
