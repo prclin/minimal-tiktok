@@ -98,19 +98,11 @@ func GetUserInfo(erId, eeId uint64) response.UserInfoResponse {
 		}
 	}
 
-	followed, err := dao.IsFollow(erId, eeId)
-	if err != nil {
-		global.Logger.Debug(err.Error())
-		return response.UserInfoResponse{
-			Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"},
-		}
-	}
-
 	return response.UserInfoResponse{
 		Response: response.Response{StatusCode: 0, StatusMsg: "ok"},
 		User: &response.UserInfo{
 			User:     user,
-			IsFollow: followed,
+			IsFollow: dao.IsFollow(erId, eeId),
 		},
 	}
 }

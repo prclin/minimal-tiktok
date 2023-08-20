@@ -43,11 +43,7 @@ func UserFollowList(userId uint64) response.RelationResponse {
 	//映射
 	userInfos := make([]response.UserInfo, len(users))
 	for i := 0; i < len(users); i++ {
-		follow, err1 := dao.IsFollow(users[i].Id, userId)
-		if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
-			return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
-		}
-		userInfos[i] = response.UserInfo{User: users[i], IsFollow: follow}
+		userInfos[i] = response.UserInfo{User: users[i], IsFollow: dao.IsFollow(users[i].Id, userId)}
 	}
 
 	return response.RelationResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
@@ -70,11 +66,7 @@ func UserFollowerList(userId uint64) response.RelationResponse {
 	//映射
 	userInfos := make([]response.UserInfo, len(users))
 	for i := 0; i < len(users); i++ {
-		follow, err1 := dao.IsFollow(userId, users[i].Id)
-		if err1 != nil && !errors.Is(err1, gorm.ErrRecordNotFound) {
-			return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
-		}
-		userInfos[i] = response.UserInfo{User: users[i], IsFollow: follow}
+		userInfos[i] = response.UserInfo{User: users[i], IsFollow: dao.IsFollow(userId, users[i].Id)}
 	}
 
 	return response.RelationResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}

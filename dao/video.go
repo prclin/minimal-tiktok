@@ -4,6 +4,7 @@ import (
 	"github.com/prclin/minimal-tiktok/global"
 	"github.com/prclin/minimal-tiktok/model/entity"
 	"gorm.io/gorm"
+	"time"
 )
 
 func SelectVideosByUserId(userId uint64) []entity.Video {
@@ -30,4 +31,11 @@ func SelectVideosBy(ids []uint64) ([]entity.Video, error) {
 func UpdateCommentCountBy(tx *gorm.DB, id uint64, step int) error {
 	sql := "update video set comment_count=comment_count+? where id=?"
 	return tx.Exec(sql, step, id).Error
+}
+
+func SelectVideosByCreateTime(latestTime time.Time, size int) ([]entity.Video, error) {
+	var videos []entity.Video
+	sql := "select id, user_id, title, play_url, cover_url, favorite_count, comment_count, extra, create_time from video where UNIX_TIMESTAMP(create_time)<? order by create_time desc limit 0,?"
+	err := global.Datasource.Raw(sql, latestTime.Unix(), size).Scan(&videos).Error
+	return videos, err
 }
