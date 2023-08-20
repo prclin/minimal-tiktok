@@ -11,3 +11,8 @@ type CommentResponse struct {
 	Response
 	Comment *CommentInfo `json:"comment"`
 }
+
+type CommentListResponse struct {
+	Response
+	CommentList []CommentInfo `json:"comment_list"`
+}

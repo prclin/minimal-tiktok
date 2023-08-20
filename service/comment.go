@@ -1,10 +1,12 @@
 package service
 
 import (
+	"errors"
 	"github.com/prclin/minimal-tiktok/dao"
 	"github.com/prclin/minimal-tiktok/global"
 	"github.com/prclin/minimal-tiktok/model/entity"
 	"github.com/prclin/minimal-tiktok/model/response"
+	"gorm.io/gorm"
 )
 
 func PublishComment(comment entity.Comment) response.CommentResponse {
@@ -82,4 +84,31 @@ func DeleteComment(userId, commentId uint64) response.CommentResponse {
 	}
 
 	return response.CommentResponse{Response: response.Response{StatusCode: 0, StatusMsg: "删除成功"}}
+}
+
+func GetCommentList(userId uint64, videoId uint64) response.CommentListResponse {
+	//获取评论列表
+	comments, err := dao.SelectCommentByVideoId(videoId)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		global.Logger.Debug(err.Error())
+		return response.CommentListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+	}
+
+	//映射
+	commentInfos := make([]response.CommentInfo, 0, len(comments))
+	for _, comment := range comments {
+		//用户信息
+		userInfoRes := GetUserInfo(userId, comment.UserId)
+		if userInfoRes.StatusCode != 0 {
+			global.Logger.Debug("在获取用户信息时发生错误!")
+			return response.CommentListResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+		}
+		//添加
+		commentInfos = append(commentInfos, response.CommentInfo{Comment: comment, User: *userInfoRes.User})
+	}
+
+	return response.CommentListResponse{
+		Response:    response.Response{StatusCode: 0, StatusMsg: "获取成功"},
+		CommentList: commentInfos,
+	}
 }
