@@ -18,3 +18,10 @@ func ExistsVideo(id uint64) bool {
 	global.Datasource.Raw(sql, id).Scan(&exist)
 	return exist
 }
+
+func SelectVideosBy(ids []uint64) ([]entity.Video, error) {
+	var videos []entity.Video
+	sql := "select id,title,play_url,cover_url,favorite_count,comment_count,extra,create_time from video where id in ?"
+	err := global.Datasource.Raw(sql, ids).Scan(&videos).Error
+	return videos, err
+}
