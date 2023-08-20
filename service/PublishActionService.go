@@ -6,15 +6,12 @@ import (
 
 	"github.com/prclin/minimal-tiktok/dao"
 	"github.com/prclin/minimal-tiktok/model/entity"
+	"github.com/prclin/minimal-tiktok/util"
 )
 
 func PublishAction(title string, videoData *multipart.FileHeader) bool {
 
-	//视频上传到minIO
-	minIOClient := getMinIoClient()
-
-	path, success := uploadVideo(minIOClient, videoData)
-
+	path, success := util.UploadToOss(videoData)
 	if !success {
 		return false
 	}
@@ -25,6 +22,7 @@ func PublishAction(title string, videoData *multipart.FileHeader) bool {
 	video.PlayURL = path
 	video.UserId = 114514
 	video.CreateTime = time.Now()
+	video.Extra = "这是一条视频 "
 
 	saveSuccess := dao.SaveVideoInfo(&video)
 
