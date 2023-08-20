@@ -53,7 +53,7 @@ GetFavoriteList 获取喜欢列表
 func GetFavoriteList(c *gin.Context) {
 	//参数校验
 	var query struct {
-		Token  string `form:"token"`
+		Token  string `form:"token" binding:"required"`
 		UserId uint64 `form:"user_id" binding:"required,min=1"`
 	}
 	err := c.ShouldBindQuery(&query)
