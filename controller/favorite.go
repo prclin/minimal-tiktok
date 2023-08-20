@@ -14,6 +14,7 @@ import (
 func init() {
 	favorite := core.ContextRouter.Group("/favorite")
 	favorite.POST("/action", PostFavoriteAction)
+	favorite.GET("/list", GetFavoriteList)
 }
 
 /*
@@ -41,5 +42,33 @@ func PostFavoriteAction(c *gin.Context) {
 		return
 	}
 	res := service.FavoriteAction(entity.Favorite{UserId: claims.Id, VideoId: query.VideoId}, query.ActionType)
+	c.JSON(http.StatusOK, res)
+}
+
+/*
+GetFavoriteList 获取喜欢列表
+
+参数 userId token
+*/
+func GetFavoriteList(c *gin.Context) {
+	//参数校验
+	var query struct {
+		Token  string `form:"token"`
+		UserId uint64 `form:"user_id" binding:"required,min=1"`
+	}
+	err := c.ShouldBindQuery(&query)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		c.JSON(http.StatusOK, response.VideoListResponse{Response: response.Response{StatusCode: 1, StatusMsg: "参数错误"}})
+		return
+	}
+	claims, err := util.ParseToken(query.Token)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		c.JSON(http.StatusOK, response.VideoListResponse{Response: response.Response{StatusCode: 1, StatusMsg: "登录信息错误"}})
+		return
+	}
+	//获取喜欢列表
+	res := service.GetFavoriteList(claims.Id, query.UserId)
 	c.JSON(http.StatusOK, res)
 }

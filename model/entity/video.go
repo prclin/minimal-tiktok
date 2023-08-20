@@ -7,7 +7,7 @@ Video 视频实体
 */
 type Video struct {
 	Id            uint64 `json:"id"` // 视频唯一标识
-	UserId        int64
+	UserId        uint64
 	Title         string `json:"title"`          // 视频标题
 	PlayURL       string `json:"play_url"`       // 视频播放地址
 	CoverURL      string `json:"cover_url"`      // 视频封面地址
