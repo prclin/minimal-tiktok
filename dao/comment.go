@@ -37,3 +37,10 @@ func DeleteCommentBy(tx *gorm.DB, id uint64) error {
 	err := tx.Exec(sql, id).Error
 	return err
 }
+
+func SelectCommentByVideoId(videoId uint64) ([]entity.Comment, error) {
+	var comments []entity.Comment
+	sql := "select id, user_id, video_id, content, extra, create_time from comment where video_id=?"
+	err := global.Datasource.Raw(sql, videoId).Scan(&comments).Error
+	return comments, err
+}
