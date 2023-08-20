@@ -1,12 +1,11 @@
 package core
 
 import (
-	"strconv"
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/prclin/minimal-tiktok/global"
 	"github.com/prclin/minimal-tiktok/model/response"
+	"strconv"
+	"time"
 )
 
 var Router *gin.Engine
@@ -24,6 +23,7 @@ func initGin() {
 	engine.NoRoute(func(context *gin.Context) {
 		context.JSON(404, response.Response{StatusCode: 404, StatusMsg: "Not Found!"})
 	})
+	Router = engine
 	Router = engine
 	ContextRouter = engine.Group(global.Configuration.Server.ContextPath)
 }

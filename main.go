@@ -1,13 +1,12 @@
 package main
 
 import (
-	"net/http"
-	"strconv"
-	"time"
-
 	"github.com/prclin/minimal-tiktok/controller"
 	"github.com/prclin/minimal-tiktok/core"
 	"github.com/prclin/minimal-tiktok/global"
+	"net/http"
+	"strconv"
+	"time"
 )
 
 func main() {
@@ -17,7 +16,6 @@ func main() {
 	controller.Init()
 
 	//服务关闭时，将logger缓冲区中日志刷出
-
 	defer global.Logger.Sync()
 
 	//启动http服务器

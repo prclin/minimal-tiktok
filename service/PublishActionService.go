@@ -1,12 +1,11 @@
 package service
 
 import (
-	"mime/multipart"
-	"time"
-
 	"github.com/prclin/minimal-tiktok/dao"
 	"github.com/prclin/minimal-tiktok/model/entity"
 	"github.com/prclin/minimal-tiktok/util"
+	"mime/multipart"
+	"time"
 )
 
 func PublishAction(title string, videoData *multipart.FileHeader) bool {
