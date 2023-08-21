@@ -8,6 +8,7 @@ type Configuration struct {
 	Zap        *Zap
 	Datasource *Datasource
 	Jwt        *Jwt
+	OSS        *OSS
 }
 
 var DefaultConfiguration = &Configuration{
@@ -15,4 +16,5 @@ var DefaultConfiguration = &Configuration{
 	Zap:        DefaultZap,
 	Datasource: DefaultDataSource,
 	Jwt:        DefaultJwt,
+	OSS:        DefaultOSS,
 }

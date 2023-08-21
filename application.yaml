@@ -24,3 +24,7 @@ jwt:
       MEgCQQCUv0OsYYKs8nHOShD7UKyPAX/FmpBpqbpt87rZ6NvKgEj9WNAQLFkxFTba
       8blV2/Ud3m3KyOZWJ5MUeQ6G331pAgMBAAE=
       -----END RSA PUBLIC KEY-----
+oss:
+  endpoint: oss-cn-chengdu.aliyuncs.com
+  accessKeyId:
+  accessKeySecret:

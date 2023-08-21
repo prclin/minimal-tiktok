@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/prclin/minimal-tiktok/dao"
 	"github.com/prclin/minimal-tiktok/global"
+	"github.com/prclin/minimal-tiktok/model/entity"
 	"github.com/prclin/minimal-tiktok/model/response"
 	"github.com/prclin/minimal-tiktok/util"
 	"gorm.io/gorm"
@@ -41,4 +42,13 @@ func GetFeedList(userId uint64, latestTime time.Time) response.FeedResponse {
 		NextTime:  nextTime,
 		VideoList: videoInfos,
 	}
+}
+
+func SaveVideo(video entity.Video) response.Response {
+	err := dao.InsertVideo(global.Datasource, video)
+	if err != nil {
+		global.Logger.Debug(err.Error())
+		return response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}
+	}
+	return response.Response{StatusCode: 0, StatusMsg: "投稿成功"}
 }

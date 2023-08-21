@@ -12,8 +12,10 @@ func init() {
 	loadConfiguration()
 	//创建logger
 	initZap()
-	//创建mysql连接
+	//初始化mysql连接
 	initGormMysql()
+	//初始化oss客户端
+	initOSS()
 	//创建router
 	initGin()
 }
