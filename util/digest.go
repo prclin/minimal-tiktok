@@ -9,6 +9,8 @@ import (
 	"errors"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/prclin/minimal-tiktok/global"
+	"io"
+	"mime/multipart"
 	"time"
 )
 
@@ -77,4 +79,14 @@ func parsePublicKey(buf []byte) (*rsa.PublicKey, error) {
 		return nil, errors.New("block nil")
 	}
 	return x509.ParsePKCS1PublicKey(block.Bytes)
+}
+
+func FileHash(file *multipart.File) (string, error) {
+	hash := md5.New()
+	_, err := io.Copy(hash, *file)
+	if err != nil {
+		return "", err
+	}
+	sum := hash.Sum(nil)
+	return hex.EncodeToString(sum[:]), err
 }

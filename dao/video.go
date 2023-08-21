@@ -39,3 +39,8 @@ func SelectVideosByCreateTime(latestTime time.Time, size int) ([]entity.Video, e
 	err := global.Datasource.Raw(sql, latestTime.Unix(), size).Scan(&videos).Error
 	return videos, err
 }
+
+func InsertVideo(tx *gorm.DB, video entity.Video) error {
+	sql := "insert into video(user_id, title, play_url, cover_url) value (?,?,?,?)"
+	return tx.Exec(sql, video.UserId, video.Title, video.PlayURL, video.CoverURL).Error
+}

@@ -1,8 +1,13 @@
 package service
 
 import (
+	"fmt"
 	"github.com/prclin/minimal-tiktok/dao"
+	"github.com/prclin/minimal-tiktok/global"
 	"github.com/prclin/minimal-tiktok/model/response"
+	"github.com/prclin/minimal-tiktok/util"
+	"mime/multipart"
+	"time"
 )
 
 /*
@@ -23,4 +28,30 @@ func GetPublishList(erId, eeId uint64) []response.VideoInfo {
 		})
 	}
 	return rVideos
+}
+
+// PostVideoToOSS 上传视频到OSS
+func PostVideoToOSS(video *multipart.FileHeader) (string, error) {
+	//获取bucket
+	bucket, err := global.OSSClient.Bucket("lattice-storage")
+	if err != nil {
+		return "", err
+	}
+	//上传文件
+	file, err := video.Open() //打开文件
+	defer file.Close()
+	if err != nil {
+		return "", err
+	}
+	hash, err := util.FileHash(&file) //文件hash
+	if err != nil {
+		return "", err
+	}
+	fmt.Println(video.Filename)
+	relativePath := fmt.Sprintf("video/%v-%v.mp4", hash, time.Now().UnixMilli())
+	err = bucket.PutObject(relativePath, file) //上传
+	if err != nil {
+		return "", err
+	}
+	return global.Configuration.OSS.EndPoint + relativePath, nil
 }
