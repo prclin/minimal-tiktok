@@ -13,8 +13,8 @@ import (
 
 func init() {
 	favorite := core.ContextRouter.Group("/favorite")
-	favorite.POST("/action", PostFavoriteAction)
-	favorite.GET("/list", GetFavoriteList)
+	favorite.POST("/action/", PostFavoriteAction)
+	favorite.GET("/list/", GetFavoriteList)
 }
 
 /*

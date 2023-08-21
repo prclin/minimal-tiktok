@@ -15,9 +15,9 @@ import (
 
 func init() {
 	user := core.ContextRouter.Group("/user")
-	user.POST("/register", RegisterUser)
-	user.POST("/login", UserLogin)
-	user.GET("", GetUserInfo)
+	user.POST("/register/", RegisterUser)
+	user.POST("/login/", UserLogin)
+	user.GET("/", GetUserInfo)
 }
 
 /*

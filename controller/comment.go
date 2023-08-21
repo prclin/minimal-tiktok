@@ -14,8 +14,8 @@ import (
 
 func init() {
 	comment := core.ContextRouter.Group("/comment")
-	comment.POST("/action", PostCommentAction)
-	comment.GET("/list", GetCommentList)
+	comment.POST("/action/", PostCommentAction)
+	comment.GET("/list/", GetCommentList)
 }
 
 /*
