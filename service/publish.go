@@ -53,5 +53,5 @@ func PostVideoToOSS(video *multipart.FileHeader) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return global.Configuration.OSS.EndPoint + relativePath, nil
+	return "https://lattice-storage." + global.Configuration.OSS.EndPoint + "/" + relativePath, nil
 }
