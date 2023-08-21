@@ -44,6 +44,7 @@ func PostVideoToOSS(video *multipart.FileHeader) (string, error) {
 		return "", err
 	}
 	hash, err := util.FileHash(&file) //文件hash
+	file.Seek(0, 0)                   //复位
 	if err != nil {
 		return "", err
 	}
