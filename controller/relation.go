@@ -12,10 +12,10 @@ import (
 
 func init() {
 	relation := core.ContextRouter.Group("/relation")
-	relation.POST("/action", PostFollowAction)
-	relation.GET("/follow/list", GetFollowList)
-	relation.GET("/follower/list", GetFollowerList)
-	relation.GET("/friend/list", GetFriendList)
+	relation.POST("/action/", PostFollowAction)
+	relation.GET("/follow/list/", GetFollowList)
+	relation.GET("/follower/list/", GetFollowerList)
+	relation.GET("/friend/list/", GetFriendList)
 }
 
 /*

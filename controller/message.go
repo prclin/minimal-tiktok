@@ -13,8 +13,8 @@ import (
 
 func init() {
 	message := core.ContextRouter.Group("/message")
-	message.POST("/action", PostMessage)
-	message.GET("/chat", GetChatHistory)
+	message.POST("/action/", PostMessage)
+	message.GET("/chat/", GetChatHistory)
 }
 
 /*

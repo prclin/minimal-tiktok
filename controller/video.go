@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	core.ContextRouter.GET("/feed", GetFeedList)
+	core.ContextRouter.GET("/feed/", GetFeedList)
 }
 
 /*

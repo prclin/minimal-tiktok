@@ -16,8 +16,8 @@ import (
 
 func init() {
 	publish := core.ContextRouter.Group("/publish")
-	publish.GET("/list", GetPublishList)
-	publish.POST("/action", PostVideo)
+	publish.GET("/list/", GetPublishList)
+	publish.POST("/action/", PostVideo)
 }
 
 /*
