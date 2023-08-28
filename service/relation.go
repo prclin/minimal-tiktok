@@ -43,7 +43,7 @@ func UserFollowList(userId uint64) response.RelationResponse {
 	//映射
 	userInfos := make([]response.UserInfo, len(users))
 	for i := 0; i < len(users); i++ {
-		userInfos[i] = response.UserInfo{User: users[i], IsFollow: dao.IsFollow(users[i].Id, userId)}
+		userInfos[i] = response.UserInfo{User: users[i], IsFollow: true}
 	}
 
 	return response.RelationResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
