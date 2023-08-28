@@ -72,14 +72,14 @@ func UserFollowerList(userId uint64) response.RelationResponse {
 	return response.RelationResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
 }
 
-func UserFriendList(userId uint64) response.RelationResponse {
+func UserFriendList(userId uint64) response.FriendResponse {
 	//获取粉丝
 	followers, err := dao.SelectFollowerBy(userId)
 	//获取关注
 	followees, err := dao.SelectFolloweeBy(userId)
 	if err != nil {
 		global.Logger.Debug(err.Error())
-		return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+		return response.FriendResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
 	}
 	//获取朋友 互相关注为朋友
 	friendIds := util.Intersection(followers, followees)
@@ -87,14 +87,24 @@ func UserFriendList(userId uint64) response.RelationResponse {
 	friends, err := dao.SelectUserByIds(friendIds)
 	if err != nil {
 		global.Logger.Debug(err.Error())
-		return response.RelationResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
+		return response.FriendResponse{Response: response.Response{StatusCode: 2, StatusMsg: "服务器内部错误"}}
 	}
 
 	//映射
-	userInfos := make([]response.UserInfo, len(friends))
+	userInfos := make([]response.FriendInfo, len(friends))
 	for i := 0; i < len(friends); i++ {
-		userInfos[i] = response.UserInfo{User: friends[i], IsFollow: true}
+		send, _ := dao.SelectLastMessageBy(userId, friends[i].Id)
+		receive, _ := dao.SelectLastMessageBy(friends[i].Id, userId)
+		if send.CreateTime.After(receive.CreateTime) {
+
+		}
+		userInfos[i] = response.FriendInfo{
+			User:     friends[i],
+			IsFollow: true,
+			Message:  util.Ternary(send.CreateTime.After(receive.CreateTime), send.Content, receive.Content),
+			MsgType:  int64(util.Ternary(send.CreateTime.After(receive.CreateTime), 1, 0)),
+		}
 	}
 
-	return response.RelationResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
+	return response.FriendResponse{Response: response.Response{StatusCode: 0, StatusMsg: "ok"}, UserList: userInfos}
 }

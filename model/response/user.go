@@ -24,3 +24,15 @@ type RelationResponse struct {
 	Response
 	UserList []UserInfo `json:"user_list"`
 }
+
+type FriendInfo struct {
+	entity.User
+	IsFollow bool   `json:"is_follow"` // true-已关注，false-未关注
+	Message  string `json:"message"`
+	MsgType  int64  `json:"msg_type"`
+}
+
+type FriendResponse struct {
+	Response
+	UserList []FriendInfo `json:"user_list"`
+}

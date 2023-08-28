@@ -17,3 +17,10 @@ func SelectMessagesBy(from, to uint64) ([]entity.Message, error) {
 	err := global.Datasource.Raw(sql, from, to).Scan(&messages).Error
 	return messages, err
 }
+
+func SelectLastMessageBy(from, to uint64) (entity.Message, error) {
+	var message entity.Message
+	sql := "select id,from_user_id, to_user_id, content, create_time from message where from_user_id=? and to_user_id=? order by create_time limit 0,1"
+	err := global.Datasource.Raw(sql, from, to).Scan(&message).Error
+	return message, err
+}
